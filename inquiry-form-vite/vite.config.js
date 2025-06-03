@@ -4,16 +4,19 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   build: {
-    rollupOptions: {
-      output: {
-        entryFileNames: 'embed-form.js',
-      },
-    },
     lib: {
-      entry: './src/main.jsx',
+      entry: 'src/main.jsx',
       name: 'EmbedForm',
       formats: ['iife'],
       fileName: () => 'embed-form.js',
+    },
+    rollupOptions: {
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
     },
   },
 });
