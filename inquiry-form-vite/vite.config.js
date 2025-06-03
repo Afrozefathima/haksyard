@@ -1,8 +1,19 @@
-// vite.config.js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // Important for local testing and relative paths
-})
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'embed-form.js',
+      },
+    },
+    lib: {
+      entry: './src/main.jsx',
+      name: 'EmbedForm',
+      formats: ['iife'],
+      fileName: () => 'embed-form.js',
+    },
+  },
+});
