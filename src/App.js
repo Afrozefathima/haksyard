@@ -19,6 +19,7 @@ export default function App() {
   const [selectedPart, setSelectedPart] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const customPartInputRef = useRef(null);
+  
 
 
   const availableParts = [
@@ -83,25 +84,6 @@ export default function App() {
     setFormData((prev) => ({ ...prev, ...update }));
   };
 
-  // Handle parts multi-select change
-  const handlePartsChange = (e) => {
-    let selectedOptions = Array.from(e.target.selectedOptions).map((opt) => opt.value);
-
-    // Only allow one 'custom' part at a time
-    if (selectedOptions.filter((p) => p === 'custom').length > 1) {
-      selectedOptions = [...new Set(selectedOptions)];
-      selectedOptions = selectedOptions.filter((part, idx, arr) =>
-        !(part === 'custom' && arr.indexOf('custom') !== idx)
-      );
-    }
-
-    // Clear customPart input if 'custom' is deselected
-    if (!selectedOptions.includes('custom')) {
-      setCustomPart('');
-    }
-
-    setFormData((prev) => ({ ...prev, parts: selectedOptions }));
-  };
 
   // Handle custom part input text change
   const handleCustomPartChange = (e) => {
