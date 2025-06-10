@@ -392,7 +392,7 @@ export default function App() {
                 type="button"
                 onClick={nextStep}
                 disabled={formData.parts.length === 0}
-                className={`px-6 py-3 rounded-md font-semibold text-black ${formData.parts.length === 0
+                className={`px-6 py-3 rounded-md font-semibold text-white ${formData.parts.length === 0
                   ? 'bg-green-300 cursor-not-allowed'
                   : 'bg-green-700 hover:bg-green-600 '
                   } transition-colors  `}
