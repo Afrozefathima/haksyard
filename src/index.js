@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react-phone-input-2/lib/style.css';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';

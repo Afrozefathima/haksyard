@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { carModels } from '../src/carData';
+import PhoneInput from 'react-phone-input-2';
 
 export default function App() {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ export default function App() {
   const [selectedPart, setSelectedPart] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const customPartInputRef = useRef(null);
-  
+
 
 
   const availableParts = [
@@ -191,6 +192,25 @@ export default function App() {
   return (
     <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md font-sans">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Car Parts Request</h2>
+      <div className="relative flex justify-between items-center mb-10 max-w-xl mx-auto">
+        <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 z-0 -translate-y-1/2" />
+
+        {[1, 2, 3].map((s, i) => (
+          <div key={s} className="relative z-10 flex flex-col items-center w-1/3">
+            <div
+              className={`
+          w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all
+          ${step === s ? 'bg-blue-500 text-white' :
+                  step > s ? 'bg-green-500 text-white' :
+                    'bg-gray-300 text-gray-600'}
+        `}
+            >
+              {s}
+            </div>
+          </div>
+        ))}
+      </div>
+
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Step 1: Make, Model, Year */}
@@ -264,23 +284,28 @@ export default function App() {
             <button
               type="button"
               onClick={nextStep}
-              className="w-full py-3 rounded-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600 transition-colors duration-300"
+              disabled={!formData.make || !formData.model || !formData.year}
+              className={`w-full py-3 rounded-md font-semibold transition-colors duration-300 ${formData.make && formData.model && formData.year
+                  ? 'text-white bg-green-700 hover:bg-green-600'
+                  : 'text-gray-400 bg-gray-300 cursor-not-allowed'
+                }`}
             >
               Next
             </button>
           </>
         )}
 
+
         {/* Step 2: Parts multi-select */}
         {step === 2 && (
           <>
-            <div className="space-y-4">
+            <div className="space-y-4 xs:space-y-2">
               {/* Part Select */}
               <div className="flex items-center gap-4">
                 <select
                   value={selectedPart}
                   onChange={(e) => setSelectedPart(e.target.value)}
-                  className="border border-gray-300 p-2 rounded-md w-4/5"
+                  className="border border-gray-300 p-2 rounded-md w-4/5 xs:w-1/2"
                 >
                   <option value="">Select a part</option>
                   {availableParts.map((part) => (
@@ -293,7 +318,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={handleAddPart}
-                  className="bg-blue-600 text-white px-4 py-2 w-1/5 rounded-md hover:bg-blue-700 transition"
+                  className="bg-blue-600 text-white px-4 py-2 w-1/5 xs:w-1/2 rounded-md hover:bg-blue-700 transition"
                 >
                   Add Part
                 </button>
@@ -358,19 +383,19 @@ export default function App() {
               <button
                 type="button"
                 onClick={prevStep}
-                className="px-6 py-3 rounded-md font-semibold text-yellow-600 border border-yellow-600 hover:bg-yellow-50 transition-colors"
+                className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
               >
-                Previous
+                Back
               </button>
 
               <button
                 type="button"
                 onClick={nextStep}
                 disabled={formData.parts.length === 0}
-                className={`px-6 py-3 rounded-md font-semibold text-white ${formData.parts.length === 0
-                    ? 'bg-yellow-300 cursor-not-allowed'
-                    : 'bg-yellow-500 hover:bg-yellow-600'
-                  } transition-colors`}
+                className={`px-6 py-3 rounded-md font-semibold text-black ${formData.parts.length === 0
+                  ? 'bg-green-300 cursor-not-allowed'
+                  : 'bg-green-700 hover:bg-green-600 '
+                  } transition-colors  `}
               >
                 Next
               </button>
@@ -401,15 +426,19 @@ export default function App() {
               <label htmlFor="phone" className="block text-gray-700 mb-1 font-medium">
                 Phone Number
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                onChange={handleChange}
+              <PhoneInput
+                country={'ae'}
                 value={formData.phone}
+                onChange={(phone) => setFormData((prev) => ({ ...prev, phone }))}
+                inputClass="w-full border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                containerClass="w-full"
+                inputStyle={{
+                  width: '100%',
+                  padding: '7px',
+                  borderRadius: '0.375rem',
+                  border: '1px solid #D1D5DB',
+                }}
                 required
-                placeholder="Your Phone Number"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>
 
@@ -449,9 +478,9 @@ export default function App() {
               <button
                 type="button"
                 onClick={prevStep}
-                className="px-6 py-3 rounded-md font-semibold text-yellow-600 border border-yellow-600 hover:bg-yellow-50 transition-colors"
+                className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
               >
-                Previous
+                Back
               </button>
 
               <button
