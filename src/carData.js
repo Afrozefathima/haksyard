@@ -1,5 +1,6 @@
 export const carModels = {
     "Honda": {
+        image: 'honda.webp',
         "Accord": { startYear: 1976 },
         "Civic": { startYear: 1972 },
         "CR-V": { startYear: 1995 },
@@ -8,6 +9,7 @@ export const carModels = {
         "Odyssey": { startYear: 1994 }
     },
     "Toyota": {
+        image: 'toyota.webp',
         "Camry": { startYear: 1982 },
         "Corolla": { startYear: 1966 },
         "RAV4": { startYear: 1994 },
@@ -16,6 +18,7 @@ export const carModels = {
         "Prius": { startYear: 1997 }
     },
     "Nissan": {
+        image: 'nissan.webp',
         "Altima": { startYear: 1992 },
         "Maxima": { startYear: 1981 },
         "Pathfinder": { startYear: 1985 },
@@ -24,6 +27,7 @@ export const carModels = {
         "X-Trail": { startYear: 2000 }
     },
     "Ford": {
+        image: 'ford.webp',
         "F-150": { startYear: 1975 },
         "Focus": { startYear: 1998 },
         "Escape": { startYear: 2000 },
@@ -32,6 +36,7 @@ export const carModels = {
         "Edge": { startYear: 2006 }
     },
     "BMW": {
+        image: 'bmw.webp',
         "3 Series": { startYear: 1975 },
         "5 Series": { startYear: 1972 },
         "7 Series": { startYear: 1977 },
@@ -39,6 +44,7 @@ export const carModels = {
         "X5": { startYear: 1999 },
         "X7": { startYear: 2018 }
     },
+    image: 'mercedesbenz.webp',
     "Mercedes": {
         "C-Class": { startYear: 1993 },
         "E-Class": { startYear: 1993 },
@@ -48,6 +54,7 @@ export const carModels = {
         "GLS": { startYear: 2016 }
     },
     "Audi": {
+        image: 'audi.webp',
         "A3": { startYear: 1996 },
         "A4": { startYear: 1994 },
         "A6": { startYear: 1994 },
@@ -56,6 +63,7 @@ export const carModels = {
         "Q7": { startYear: 2005 }
     },
     "Lexus": {
+        image: 'lexus.webp',
         "ES": { startYear: 1989 },
         "IS": { startYear: 1998 },
         "LS": { startYear: 1989 },
@@ -64,6 +72,7 @@ export const carModels = {
         "LX": { startYear: 1995 }
     },
     "Chevrolet": {
+        image: 'chevrolet.webp',
         "Camaro": { startYear: 1966 },
         "Malibu": { startYear: 1964 },
         "Silverado": { startYear: 1998 },
@@ -72,6 +81,7 @@ export const carModels = {
         "Equinox": { startYear: 2004 }
     },
     "Hyundai": {
+        image: 'hyundai.webp',
         "Elantra": { startYear: 1990 },
         "Sonata": { startYear: 1985 },
         "Tucson": { startYear: 2004 },
@@ -80,6 +90,7 @@ export const carModels = {
         "Palisade": { startYear: 2018 }
     },
     "Kia": {
+        image: 'kia.webp',
         "Forte": { startYear: 2008 },
         "Optima/K5": { startYear: 2000 },
         "Sorento": { startYear: 2002 },
@@ -88,6 +99,7 @@ export const carModels = {
         "Soul": { startYear: 2008 }
     },
     "Mazda": {
+        image: 'mazda.webp',
         "Mazda3": { startYear: 2003 },
         "Mazda6": { startYear: 2002 },
         "CX-5": { startYear: 2012 },

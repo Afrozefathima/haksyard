@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { carModels } from '../src/carData';
 import PhoneInput from 'react-phone-input-2';
+import { cities } from './cities';
+
+const brands = Object.entries(carModels).map(([make, data]) => ({
+  name: make,
+  href: `/`,
+  src: `/img/car-logos/${data.image}`,
+  alt: `${make} logo`,
+}));
+
 
 export default function App() {
   const [formData, setFormData] = useState({
@@ -20,8 +29,15 @@ export default function App() {
   const [selectedPart, setSelectedPart] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const customPartInputRef = useRef(null);
-
-
+  const [customMake, setCustomMake] = useState('');
+  const [customModel, setCustomModel] = useState('');
+  const [showCustomMakeInput, setShowCustomMakeInput] = useState(false);
+  const [showCustomModelInput, setShowCustomModelInput] = useState(false);
+  const customMakeRef = useRef(null);
+  const customModelRef = useRef(null);
+  const [customYear, setCustomYear] = useState('');
+  const [showCustomYearInput, setShowCustomYearInput] = useState(false);
+  const customYearRef = useRef(null);
 
   const availableParts = [
     'Engine',
@@ -73,17 +89,47 @@ export default function App() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     let update = { [name]: value };
+
     if (name === 'make') {
-      // Reset model and year when make changes
-      update.model = '';
-      update.year = '';
+      if (value === 'custom') {
+        // Show custom make input
+        setShowCustomMakeInput(true);
+        setFormData(prev => ({ ...prev, make: '', model: '', year: '' }));
+
+        // Show custom model and year inputs
+        setShowCustomModelInput(true);
+        setCustomModel('');
+        setShowCustomYearInput(true);
+        setCustomYear('');
+
+        setTimeout(() => customMakeRef.current?.focus(), 0);
+      } else {
+        setShowCustomMakeInput(false);
+        setShowCustomModelInput(false);
+        setShowCustomYearInput(false);
+        update.model = '';
+        update.year = '';
+      }
     }
+
     if (name === 'model') {
-      // Reset year when model changes
-      update.year = '';
+      if (value === 'custom') {
+        setShowCustomModelInput(true);
+        setCustomModel('');
+        setShowCustomYearInput(true);
+        setCustomYear('');
+        setTimeout(() => customModelRef.current?.focus(), 0);
+      } else {
+        setShowCustomModelInput(false);
+        setShowCustomYearInput(false);
+        update.year = '';
+      }
     }
+
     setFormData((prev) => ({ ...prev, ...update }));
   };
+
+
 
 
   // Handle custom part input text change
@@ -177,7 +223,10 @@ export default function App() {
   };
 
   // Get model options for selected make
-  const getModelOptions = () => (formData.make ? Object.keys(carModels[formData.make]) : []);
+  const getModelOptions = () => {
+    if (!formData.make || formData.make === 'custom') return [];
+    return Object.keys(carModels[formData.make] || {});
+  };
 
   // Get year options from startYear to current year descending
   const getYearOptions = () => {
@@ -190,7 +239,7 @@ export default function App() {
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md font-sans">
+    <div className="max-w-7xl mx-auto p-6 shadow-md rounded-md font-sans">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Car Parts Request</h2>
       <div className="relative flex justify-between items-center mb-10 max-w-xl mx-auto">
         <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 z-0 -translate-y-1/2" />
@@ -216,78 +265,123 @@ export default function App() {
         {/* Step 1: Make, Model, Year */}
         {step === 1 && (
           <>
+            {/* Make */}
             <div>
               <label htmlFor="make" className="block text-gray-700 mb-1 font-medium">
                 Select Make
               </label>
-              <select
-                id="make"
-                name="make"
-                onChange={handleChange}
-                value={formData.make}
-                required
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              >
-                <option value="">Select Make</option>
-                {Object.keys(carModels).map((make) => (
-                  <option key={make} value={make}>
-                    {make}
-                  </option>
-                ))}
-              </select>
+              {!showCustomMakeInput ? (
+                <select
+                  id="make"
+                  name="make"
+                  onChange={handleChange}
+                  value={formData.make}
+                  required
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                >
+                  <option value="">Select Make</option>
+                  {Object.keys(carModels).map((make) => (
+                    <option key={make} value={make}>{make}</option>
+                  ))}
+                  <option value="custom">Other (Custom)</option>
+                </select>
+              ) : (
+                <input
+                  ref={customMakeRef}
+                  type="text"
+                  placeholder="Enter custom make"
+                  value={customMake}
+                  onChange={(e) => setCustomMake(e.target.value)}
+                  onBlur={() => {
+                    if (customMake.trim()) setFormData(prev => ({ ...prev, make: customMake.trim() }));
+                  }}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              )}
             </div>
 
+            {/* Model */}
             <div>
               <label htmlFor="model" className="block text-gray-700 mb-1 font-medium">
                 Select Model
               </label>
-              <select
-                id="model"
-                name="model"
-                onChange={handleChange}
-                value={formData.model}
-                required
-                disabled={!formData.make}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              >
-                <option value="">Select Model</option>
-                {getModelOptions().map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </select>
+              {!showCustomModelInput ? (
+                <select
+                  id="model"
+                  name="model"
+                  onChange={handleChange}
+                  value={formData.model}
+                  required
+                  disabled={!formData.make}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                >
+                  <option value="">Select Model</option>
+                  {getModelOptions().map((model) => (
+                    <option key={model} value={model}>{model}</option>
+                  ))}
+                  {formData.make && <option value="custom">Other (Custom)</option>}
+                </select>
+              ) : (
+                <input
+                  ref={customModelRef}
+                  type="text"
+                  placeholder="Enter custom model"
+                  value={customModel}
+                  onChange={(e) => setCustomModel(e.target.value)}
+                  onBlur={() => {
+                    if (customModel.trim()) setFormData(prev => ({ ...prev, model: customModel.trim() }));
+                  }}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              )}
             </div>
 
+
+            {/* Year */}
             <div>
               <label htmlFor="year" className="block text-gray-700 mb-1 font-medium">
                 Select Year
               </label>
-              <select
-                id="year"
-                name="year"
-                onChange={handleChange}
-                value={formData.year}
-                required
-                disabled={!formData.model}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              >
-                <option value="">Select Year</option>
-                {getYearOptions().map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
+
+              {!showCustomYearInput ? (
+                <select
+                  id="year"
+                  name="year"
+                  onChange={handleChange}
+                  value={formData.year}
+                  required
+                  disabled={!formData.model}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                >
+                  <option value="">Select Year</option>
+                  {getYearOptions().map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                  {formData.model && <option value="custom">Other (Custom)</option>}
+                </select>
+              ) : (
+                <input
+                  ref={customYearRef}
+                  type="text"
+                  placeholder="Enter custom year"
+                  value={customYear}
+                  onChange={(e) => setCustomYear(e.target.value)}
+                  onBlur={() => {
+                    if (customYear.trim()) setFormData(prev => ({ ...prev, year: customYear.trim() }));
+                  }}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              )}
             </div>
+
 
             <button
               type="button"
               onClick={nextStep}
               disabled={!formData.make || !formData.model || !formData.year}
               className={`w-full py-3 rounded-md font-semibold transition-colors duration-300 ${formData.make && formData.model && formData.year
-                  ? 'text-white bg-green-700 hover:bg-green-600'
-                  : 'text-gray-400 bg-gray-300 cursor-not-allowed'
+                ? 'text-white bg-green-700 hover:bg-green-600'
+                : 'text-gray-400 bg-gray-300 cursor-not-allowed'
                 }`}
             >
               Next
@@ -513,6 +607,52 @@ export default function App() {
           </div>
         )}
       </form>
+
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {brands.map((brand) => (
+          <li key={brand.name}>
+            <a
+              href={brand.href}
+              className="block border h-full hover:border-blue-600 py-3"
+              aria-label={`${brand.name} spare parts`}
+            >
+              <figure className="flex flex-col items-center justify-center">
+                <img
+                  src={brand.src}
+                  alt={brand.alt}
+                  className="object-scale-down"
+                  width={50}
+                  height={50}
+                />
+                <figcaption className="text-center mt-2 w-3/5 bg-darkblue hover:bg-blue-400 font-bold text-white text-sm hover:text-gray-800 rounded-sm px-2 py-1">
+                  {brand.name}
+                </figcaption>
+              </figure>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {cities.map((city) => (
+          <li key={city.id}>
+            <a
+              href={city.link} // use 'link' from your city object
+              className="block border h-full hover:border-blue-600 py-3"
+              aria-label={`${city.city} map`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <figure className="flex flex-col items-center justify-center">
+
+                <figcaption className="text-center mt-2 w-3/5 bg-blue-900 text-white font-bold  text-sm hover:text-gray-800 rounded-sm px-2 py-1">
+                  {city.city}
+                </figcaption>
+              </figure>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
