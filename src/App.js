@@ -239,420 +239,421 @@ export default function App() {
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   return (
-    <div className="max-w-7xl mx-auto p-6 shadow-md rounded-md font-sans">
-      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Car Parts Request</h2>
-      <div className="relative flex justify-between items-center mb-10 max-w-xl mx-auto">
-        <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 z-0 -translate-y-1/2" />
+    <div className='mt-10 xs:mx-3 xxs:mx-2 sm:mx-3 md:mx-5 mx-10'>
+      <div className="max-w-3xl mx-auto p-6 shadow-md rounded-md font-sans">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Car Parts Request</h2>
+        <div className="relative flex justify-between items-center mb-10 max-w-xl mx-auto">
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 z-0 -translate-y-1/2" />
 
-        {[1, 2, 3].map((s, i) => (
-          <div key={s} className="relative z-10 flex flex-col items-center w-1/3">
-            <div
-              className={`
+          {[1, 2, 3].map((s, i) => (
+            <div key={s} className="relative z-10 flex flex-col items-center w-1/3">
+              <div
+                className={`
           w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all
           ${step === s ? 'bg-blue-500 text-white' :
-                  step > s ? 'bg-green-500 text-white' :
-                    'bg-gray-300 text-gray-600'}
+                    step > s ? 'bg-green-500 text-white' :
+                      'bg-gray-300 text-gray-600'}
         `}
-            >
-              {s}
-            </div>
-          </div>
-        ))}
-      </div>
-
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Step 1: Make, Model, Year */}
-        {step === 1 && (
-          <>
-            {/* Make */}
-            <div>
-              <label htmlFor="make" className="block text-gray-700 mb-1 font-medium">
-                Select Make
-              </label>
-              {!showCustomMakeInput ? (
-                <select
-                  id="make"
-                  name="make"
-                  onChange={handleChange}
-                  value={formData.make}
-                  required
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                  <option value="">Select Make</option>
-                  {Object.keys(carModels).map((make) => (
-                    <option key={make} value={make}>{make}</option>
-                  ))}
-                  <option value="custom">Other (Custom)</option>
-                </select>
-              ) : (
-                <input
-                  ref={customMakeRef}
-                  type="text"
-                  placeholder="Enter custom make"
-                  value={customMake}
-                  onChange={(e) => setCustomMake(e.target.value)}
-                  onBlur={() => {
-                    if (customMake.trim()) setFormData(prev => ({ ...prev, make: customMake.trim() }));
-                  }}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              )}
-            </div>
-
-            {/* Model */}
-            <div>
-              <label htmlFor="model" className="block text-gray-700 mb-1 font-medium">
-                Select Model
-              </label>
-              {!showCustomModelInput ? (
-                <select
-                  id="model"
-                  name="model"
-                  onChange={handleChange}
-                  value={formData.model}
-                  required
-                  disabled={!formData.make}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                  <option value="">Select Model</option>
-                  {getModelOptions().map((model) => (
-                    <option key={model} value={model}>{model}</option>
-                  ))}
-                  {formData.make && <option value="custom">Other (Custom)</option>}
-                </select>
-              ) : (
-                <input
-                  ref={customModelRef}
-                  type="text"
-                  placeholder="Enter custom model"
-                  value={customModel}
-                  onChange={(e) => setCustomModel(e.target.value)}
-                  onBlur={() => {
-                    if (customModel.trim()) setFormData(prev => ({ ...prev, model: customModel.trim() }));
-                  }}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              )}
-            </div>
-
-
-            {/* Year */}
-            <div>
-              <label htmlFor="year" className="block text-gray-700 mb-1 font-medium">
-                Select Year
-              </label>
-
-              {!showCustomYearInput ? (
-                <select
-                  id="year"
-                  name="year"
-                  onChange={handleChange}
-                  value={formData.year}
-                  required
-                  disabled={!formData.model}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                  <option value="">Select Year</option>
-                  {getYearOptions().map((year) => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                  {formData.model && <option value="custom">Other (Custom)</option>}
-                </select>
-              ) : (
-                <input
-                  ref={customYearRef}
-                  type="text"
-                  placeholder="Enter custom year"
-                  value={customYear}
-                  onChange={(e) => setCustomYear(e.target.value)}
-                  onBlur={() => {
-                    if (customYear.trim()) setFormData(prev => ({ ...prev, year: customYear.trim() }));
-                  }}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              )}
-            </div>
-
-
-            <button
-              type="button"
-              onClick={nextStep}
-              disabled={!formData.make || !formData.model || !formData.year}
-              className={`w-full py-3 rounded-md font-semibold transition-colors duration-300 ${formData.make && formData.model && formData.year
-                ? 'text-white bg-green-700 hover:bg-green-600'
-                : 'text-gray-400 bg-gray-300 cursor-not-allowed'
-                }`}
-            >
-              Next
-            </button>
-          </>
-        )}
-
-
-        {/* Step 2: Parts multi-select */}
-        {step === 2 && (
-          <>
-            <div className="space-y-4 xs:space-y-2">
-              {/* Part Select */}
-              <div className="flex items-center gap-4">
-                <select
-                  value={selectedPart}
-                  onChange={(e) => setSelectedPart(e.target.value)}
-                  className="border border-gray-300 p-2 rounded-md w-4/5 xs:w-1/2"
-                >
-                  <option value="">Select a part</option>
-                  {availableParts.map((part) => (
-                    <option key={part} value={part}>
-                      {part === 'custom' ? 'Other (Custom)' : part}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  type="button"
-                  onClick={handleAddPart}
-                  className="bg-blue-600 text-white px-4 py-2 w-1/5 xs:w-1/2 rounded-md hover:bg-blue-700 transition"
-                >
-                  Add Part
-                </button>
+              >
+                {s}
               </div>
+            </div>
+          ))}
+        </div>
 
-              {/* Custom part input */}
-              {showCustomInput && (
-                <div className="mt-3">
-                  <label
-                    htmlFor="customPart"
-                    className="block text-gray-700 mb-1 font-medium"
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Step 1: Make, Model, Year */}
+          {step === 1 && (
+            <>
+              {/* Make */}
+              <div>
+                <label htmlFor="make" className="block text-gray-700 mb-1 font-medium">
+                  Select Make
+                </label>
+                {!showCustomMakeInput ? (
+                  <select
+                    id="make"
+                    name="make"
+                    onChange={handleChange}
+                    value={formData.make}
+                    required
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   >
-                    Enter Custom Part Name
-                  </label>
+                    <option value="">Select Make</option>
+                    {Object.keys(carModels).map((make) => (
+                      <option key={make} value={make}>{make}</option>
+                    ))}
+                    <option value="custom">Other (Custom)</option>
+                  </select>
+                ) : (
                   <input
-                    ref={customPartInputRef}
+                    ref={customMakeRef}
                     type="text"
-                    id="customPart"
-                    value={customPart}
-                    onChange={handleCustomPartChange}
-                    onBlur={addCustomPart}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addCustomPart();
-                      }
+                    placeholder="Enter custom make"
+                    value={customMake}
+                    onChange={(e) => setCustomMake(e.target.value)}
+                    onBlur={() => {
+                      if (customMake.trim()) setFormData(prev => ({ ...prev, make: customMake.trim() }));
                     }}
-                    placeholder="Type your part name and press Enter"
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   />
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* Selected Parts List */}
-              {formData.parts.length > 0 && (
-                <div className="mt-4">
-                  <p className="font-medium text-gray-800 mb-2">Selected Parts:</p>
-                  <ul className="flex flex-wrap gap-2">
-                    {formData.parts.map((part) => (
-                      <li
-                        key={part}
-                        className="inline-flex items-center bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold"
-                      >
-                        {part}
-                        <button
-                          type="button"
-                          onClick={() => removePart(part)}
-                          className="ml-2 text-yellow-900 hover:text-yellow-700 focus:outline-none"
-                          aria-label={`Remove ${part}`}
-                        >
-                          &times;
-                        </button>
-                      </li>
+              {/* Model */}
+              <div>
+                <label htmlFor="model" className="block text-gray-700 mb-1 font-medium">
+                  Select Model
+                </label>
+                {!showCustomModelInput ? (
+                  <select
+                    id="model"
+                    name="model"
+                    onChange={handleChange}
+                    value={formData.model}
+                    required
+                    disabled={!formData.make}
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  >
+                    <option value="">Select Model</option>
+                    {getModelOptions().map((model) => (
+                      <option key={model} value={model}>{model}</option>
                     ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+                    {formData.make && <option value="custom">Other (Custom)</option>}
+                  </select>
+                ) : (
+                  <input
+                    ref={customModelRef}
+                    type="text"
+                    placeholder="Enter custom model"
+                    value={customModel}
+                    onChange={(e) => setCustomModel(e.target.value)}
+                    onBlur={() => {
+                      if (customModel.trim()) setFormData(prev => ({ ...prev, model: customModel.trim() }));
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  />
+                )}
+              </div>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-6">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
-              >
-                Back
-              </button>
+
+              {/* Year */}
+              <div>
+                <label htmlFor="year" className="block text-gray-700 mb-1 font-medium">
+                  Select Year
+                </label>
+
+                {!showCustomYearInput ? (
+                  <select
+                    id="year"
+                    name="year"
+                    onChange={handleChange}
+                    value={formData.year}
+                    required
+                    disabled={!formData.model}
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white disabled:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  >
+                    <option value="">Select Year</option>
+                    {getYearOptions().map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                    {formData.model && <option value="custom">Other (Custom)</option>}
+                  </select>
+                ) : (
+                  <input
+                    ref={customYearRef}
+                    type="text"
+                    placeholder="Enter custom year"
+                    value={customYear}
+                    onChange={(e) => setCustomYear(e.target.value)}
+                    onBlur={() => {
+                      if (customYear.trim()) setFormData(prev => ({ ...prev, year: customYear.trim() }));
+                    }}
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  />
+                )}
+              </div>
+
 
               <button
                 type="button"
                 onClick={nextStep}
-                disabled={formData.parts.length === 0}
-                className={`px-6 py-3 rounded-md font-semibold text-white ${formData.parts.length === 0
-                  ? 'bg-green-300 cursor-not-allowed'
-                  : 'bg-green-700 hover:bg-green-600 '
-                  } transition-colors  `}
+                disabled={!formData.make || !formData.model || !formData.year}
+                className={`w-full py-3 rounded-md font-semibold transition-colors duration-300 ${formData.make && formData.model && formData.year
+                  ? 'text-white bg-green-700 hover:bg-green-600'
+                  : 'text-gray-400 bg-gray-300 cursor-not-allowed'
+                  }`}
               >
                 Next
               </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
 
-        {/* Step 3: Contact details */}
-        {step === 3 && (
-          <>
-            <div>
-              <label htmlFor="name" className="block text-gray-700 mb-1 font-medium">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                onChange={handleChange}
-                value={formData.name}
-                required
-                placeholder="Your Name"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
 
-            <div>
-              <label htmlFor="phone" className="block text-gray-700 mb-1 font-medium">
-                Phone Number
-              </label>
-              <PhoneInput
-                country={'ae'}
-                value={formData.phone}
-                onChange={(phone) => setFormData((prev) => ({ ...prev, phone }))}
-                inputClass="w-full border-gray-300 focus:ring-2 focus:ring-yellow-400"
-                containerClass="w-full"
-                inputStyle={{
-                  width: '100%',
-                  padding: '7px',
-                  borderRadius: '0.375rem',
-                  border: '1px solid #D1D5DB',
-                }}
-                required
-              />
-            </div>
+          {/* Step 2: Parts multi-select */}
+          {step === 2 && (
+            <>
+              <div className="space-y-4 xs:space-y-2">
+                {/* Part Select */}
+                <div className="flex items-center gap-4">
+                  <select
+                    value={selectedPart}
+                    onChange={(e) => setSelectedPart(e.target.value)}
+                    className="border border-gray-300 p-2 rounded-md w-4/5 xs:w-1/2"
+                  >
+                    <option value="">Select a part</option>
+                    {availableParts.map((part) => (
+                      <option key={part} value={part}>
+                        {part === 'custom' ? 'Other (Custom)' : part}
+                      </option>
+                    ))}
+                  </select>
 
-            <div>
-              <label htmlFor="email" className="block text-gray-700 mb-1 font-medium">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                onChange={handleChange}
-                value={formData.email}
-                required
-                placeholder="Your Email"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
+                  <button
+                    type="button"
+                    onClick={handleAddPart}
+                    className="bg-blue-600 text-white px-4 py-2 w-1/5 xs:w-1/2 rounded-md hover:bg-blue-700 transition"
+                  >
+                    Add Part
+                  </button>
+                </div>
 
-            <div>
-              <label htmlFor="location" className="block text-gray-700 mb-1 font-medium">
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                onChange={handleChange}
-                value={formData.location}
-                required
-                placeholder="Your Location"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
+                {/* Custom part input */}
+                {showCustomInput && (
+                  <div className="mt-3">
+                    <label
+                      htmlFor="customPart"
+                      className="block text-gray-700 mb-1 font-medium"
+                    >
+                      Enter Custom Part Name
+                    </label>
+                    <input
+                      ref={customPartInputRef}
+                      type="text"
+                      id="customPart"
+                      value={customPart}
+                      onChange={handleCustomPartChange}
+                      onBlur={addCustomPart}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addCustomPart();
+                        }
+                      }}
+                      placeholder="Type your part name and press Enter"
+                      className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
+                  </div>
+                )}
 
-            <div className="flex justify-between mt-6">
+                {/* Selected Parts List */}
+                {formData.parts.length > 0 && (
+                  <div className="mt-4">
+                    <p className="font-medium text-gray-800 mb-2">Selected Parts:</p>
+                    <ul className="flex flex-wrap gap-2">
+                      {formData.parts.map((part) => (
+                        <li
+                          key={part}
+                          className="inline-flex items-center bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold"
+                        >
+                          {part}
+                          <button
+                            type="button"
+                            onClick={() => removePart(part)}
+                            className="ml-2 text-yellow-900 hover:text-yellow-700 focus:outline-none"
+                            aria-label={`Remove ${part}`}
+                          >
+                            &times;
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-6">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={formData.parts.length === 0}
+                  className={`px-6 py-3 rounded-md font-semibold text-white ${formData.parts.length === 0
+                    ? 'bg-green-300 cursor-not-allowed'
+                    : 'bg-green-700 hover:bg-green-600 '
+                    } transition-colors  `}
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* Step 3: Contact details */}
+          {step === 3 && (
+            <>
+              <div>
+                <label htmlFor="name" className="block text-gray-700 mb-1 font-medium">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  onChange={handleChange}
+                  value={formData.name}
+                  required
+                  placeholder="Your Name"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-gray-700 mb-1 font-medium">
+                  Phone Number
+                </label>
+                <PhoneInput
+                  country={'ae'}
+                  value={formData.phone}
+                  onChange={(phone) => setFormData((prev) => ({ ...prev, phone }))}
+                  inputClass="w-full border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                  containerClass="w-full"
+                  inputStyle={{
+                    width: '100%',
+                    padding: '7px',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #D1D5DB',
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-gray-700 mb-1 font-medium">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  onChange={handleChange}
+                  value={formData.email}
+                  required
+                  placeholder="Your Email"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="location" className="block text-gray-700 mb-1 font-medium">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  onChange={handleChange}
+                  value={formData.location}
+                  required
+                  placeholder="Your Location"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+              </div>
+
+              <div className="flex justify-between mt-6">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`px-6 py-3 rounded-md font-semibold text-white ${loading ? 'bg-yellow-300 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-600'
+                    } transition-colors`}
+                >
+                  {loading ? 'Submitting...' : 'Submit'}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* Step 4: Submission success */}
+          {step === 4 && (
+            <div className="text-center p-6 bg-yellow-50 rounded-md border border-yellow-300">
+              <h3 className="text-2xl font-semibold mb-4 text-yellow-700">Thank you!</h3>
+              <p className="mb-2">Your inquiry has been submitted successfully.</p>
+              <p>
+                Your Reference Number: <strong>{refNumber}</strong>
+              </p>
               <button
                 type="button"
-                onClick={prevStep}
-                className="px-6 py-3 rounded-md font-semibold text-black border border-[#828487] hover:bg-red-500 transition-colors"
+                onClick={() => setStep(1)}
+                className="mt-6 px-6 py-3 rounded-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600 transition-colors"
               >
-                Back
-              </button>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`px-6 py-3 rounded-md font-semibold text-white ${loading ? 'bg-yellow-300 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-600'
-                  } transition-colors`}
-              >
-                {loading ? 'Submitting...' : 'Submit'}
+                Submit Another Request
               </button>
             </div>
-          </>
-        )}
+          )}
+        </form>
+      </div>
+      <div className='max-w-5xl mx-auto'>
+        <ul className="grid grid-cols-4 sm:grid-cols-3 xs:grid-cols-1 xxs:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+          {brands.map((brand) => (
+            <li key={brand.name}>
+              <a
+                href={brand.href}
+                className="block border h-full hover:border-lime-400 py-2"
+                aria-label={`${brand.name} spare parts`}
+              >
+                <figure className="flex flex-col items-center justify-between">
 
-        {/* Step 4: Submission success */}
-        {step === 4 && (
-          <div className="text-center p-6 bg-yellow-50 rounded-md border border-yellow-300">
-            <h3 className="text-2xl font-semibold mb-4 text-yellow-700">Thank you!</h3>
-            <p className="mb-2">Your inquiry has been submitted successfully.</p>
-            <p>
-              Your Reference Number: <strong>{refNumber}</strong>
-            </p>
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="mt-6 px-6 py-3 rounded-md font-semibold text-white bg-yellow-500 hover:bg-yellow-600 transition-colors"
-            >
-              Submit Another Request
-            </button>
-          </div>
-        )}
-      </form>
+                  <figcaption className="text-center mt-2 w-3/5 font-bold  text-xl rounded-sm px-2 py-1">
+                    {brand.name}
+                  </figcaption>
+                </figure>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <hr className='my-10' />
 
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {brands.map((brand) => (
-          <li key={brand.name}>
-            <a
-              href={brand.href}
-              className="block border h-full hover:border-blue-600 py-3"
-              aria-label={`${brand.name} spare parts`}
-            >
-              <figure className="flex flex-col items-center justify-center">
-                <img
-                  src={brand.src}
-                  alt={brand.alt}
-                  className="object-scale-down"
-                  width={50}
-                  height={50}
-                />
-                <figcaption className="text-center mt-2 w-3/5 bg-darkblue hover:bg-blue-400 font-bold text-white text-sm hover:text-gray-800 rounded-sm px-2 py-1">
-                  {brand.name}
-                </figcaption>
-              </figure>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div className='max-w-5xl mx-auto'>
+        <ul className="grid grid-cols-4 sm:grid-cols-3 xs:grid-cols-1 xxs:grid-cols-2 md:grid-cols-4 gap-4 my-10">
+          {cities.map((city) => (
+            <li key={city.id}>
+              <a
+                href={city.link} // use 'link' from your city object
+                className="block border h-full hover:border-lime-400 py-2"
+                aria-label={`${city.city} map`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <figure className="flex flex-col items-center justify-center">
 
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {cities.map((city) => (
-          <li key={city.id}>
-            <a
-              href={city.link} // use 'link' from your city object
-              className="block border h-full hover:border-blue-600 py-3"
-              aria-label={`${city.city} map`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <figure className="flex flex-col items-center justify-center">
+                  <figcaption className="text-center mt-2 w-3/5 font-bold  text-xl rounded-sm px-2 py-1">
+                    {city.city}
+                  </figcaption>
+                </figure>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-                <figcaption className="text-center mt-2 w-3/5 bg-blue-900 text-white font-bold  text-sm hover:text-gray-800 rounded-sm px-2 py-1">
-                  {city.city}
-                </figcaption>
-              </figure>
-            </a>
-          </li>
-        ))}
-      </ul>
+
     </div>
   );
 }
