@@ -126,6 +126,7 @@ export default function App() {
       }
     }
 
+
     setFormData((prev) => ({ ...prev, ...update }));
   };
 
@@ -230,10 +231,17 @@ export default function App() {
 
   // Get year options from startYear to current year descending
   const getYearOptions = () => {
-    const start = carModels[formData.make]?.[formData.model]?.startYear;
+    if (!formData.make || !formData.model) return [];
+
+    const modelData = carModels[formData.make]?.models?.[formData.model];
+    const start = modelData?.startYear;
     const now = new Date().getFullYear();
-    return start ? Array.from({ length: now - start + 1 }, (_, i) => now - i) : [];
+
+    if (!start) return [];
+
+    return Array.from({ length: now - start + 1 }, (_, i) => now - i);
   };
+
 
   const nextStep = () => setStep((s) => Math.min(s + 1, 4));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
