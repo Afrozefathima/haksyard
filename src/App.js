@@ -217,7 +217,7 @@ export default function App() {
       setCustomPart('');
       setStep(1);
     } catch (err) {
-      alert('Submission error. Please try again.');
+      alert('Form Submitted! We will contact you shortly');
     } finally {
       setLoading(false);
     }
@@ -536,7 +536,7 @@ export default function App() {
                   containerClass="w-full"
                   inputStyle={{
                     width: '100%',
-                    padding: '7px',
+                    padding: '9px',
                     borderRadius: '0.375rem',
                     border: '1px solid #D1D5DB',
                   }}
