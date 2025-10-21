@@ -218,6 +218,18 @@ export default function App() {
       setStep(1);
     } catch (err) {
       alert('Form Submitted! We will contact you shortly');
+      setFormData({
+        make: '',
+        model: '',
+        year: '',
+        parts: [],
+        name: '',
+        phone: '',
+        email: '',
+        location: '',
+      });
+      setCustomPart('');
+      setStep(1);
     } finally {
       setLoading(false);
     }
