@@ -225,7 +225,7 @@ export default function App() {
   // Get model options for selected make
   const getModelOptions = () => {
     if (!formData.make || formData.make === 'custom') return [];
-    return Object.keys(carModels[formData.make] || {});
+    return Object.keys(carModels[formData.make]?.models || {});
   };
 
   // Get year options from startYear to current year descending
